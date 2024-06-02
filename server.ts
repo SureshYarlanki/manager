@@ -37,21 +37,30 @@ app.use("/groups", groupRouter)
 
 if (port) {
     app.listen(Number(port),  () => {
+
+        if (dbUrl && dbName) {
+            DBUtil.connectToDB(dbUrl, dbName).then((dbResponse) => {
+                console.log(dbResponse)
+            }).catch((error) => {
+                console.log(error)
+                process.exit(0)//force stop express server
+            })
+        }
         
-            (async () => {
-                try {
-                    if (dbUrl && dbName) {
-                        const result = await DBUtil.connectToDB(dbUrl, dbName);
-                    console.log(result); // Output: Connected to MongoDB successfully
-                    }
-                    else {
-                        console.log("connection failed in port")
-                    }
+            // (async () => {
+            //     try {
+            //         if (dbUrl && dbName) {
+            //             const result = await DBUtil.connectToDB(dbUrl, dbName);
+            //         console.log(result); // Output: Connected to MongoDB successfully
+            //         }
+            //         else {
+            //             console.log("connection failed in port")
+            //         }
                     
-                } catch (error) {
-                    console.error(error); // Output: MongoDB connection failed: [Detailed Error Message]
-                }
-            })();
+            //     } catch (error) {
+            //         console.error(error); // Output: MongoDB connection failed: [Detailed Error Message]
+            //     }
+            // })();
         console.log(`Express server is started at http://${port}`)
        
     })
