@@ -36,7 +36,7 @@ app.use("/groups", groupRouter)
 
 
 if (port) {
-    app.listen(Number(port),  () => {
+    app.listen(port,  () => {
 
             (async () => {
                 try {
