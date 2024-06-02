@@ -2,9 +2,9 @@
 
 import express, { Application, Request, Response } from "express";
 import dotenv from "dotenv"
+import { DBUtil } from "./util/DBUtil";
 import contactRouter from "./router/contactRouter";
 import groupRouter from "./router/groupRouter";
-import mongoose from "mongoose";
 
 const app: Application = express();
 
@@ -35,17 +35,25 @@ app.use("/contacts", contactRouter)
 app.use("/groups", groupRouter)
 
 
-if (dbUrl) {
-mongoose.connect(dbUrl).then(() => {
-    console.log("Connected to MongoDB successfully")
-}).catch(() => {
-    console.log("MongoDB connection failed")
-})
+// if (dbUrl) {
+// mongoose.connect(dbUrl).then(() => {
+//     console.log("Connected to MongoDB successfully")
+// }).catch(() => {
+//     console.log("MongoDB connection failed")
+// })
+// }
+
+if (dbUrl && dbName) {
+    DBUtil.connectToDB(dbUrl, dbName).then((dbResponse) => {
+        console.log(dbResponse)
+    }).catch((error) => {
+        console.log(error)
+        process.exit(0)//force stop express server
+    })
 }
 
 if (port) {
     app.listen(port, () => {
         console.log(`Express server is started at http://${port}`)
-       
     })
 }
